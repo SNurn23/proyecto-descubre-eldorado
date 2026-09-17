@@ -4,6 +4,10 @@ Frontend del concurso de gamificación urbana **"Descubre Eldorado"**, organizad
 
 Este repo es un **prototipo**: un frontend independiente que conserva las pantallas y el flujo visual del proyecto real, pero funciona sin backend usando datos mock en `src/lib/mock-api.ts`.
 
+## Versión en producción
+
+Existe una versión de este proyecto con backend propio, ya desplegada: **https://descubre-eldorado.vercel.app**. Sirve como referencia visual y funcional del flujo completo.
+
 ## Stack
 
 - Next.js 14 (App Router) + React 18 + TypeScript
@@ -62,6 +66,8 @@ Para reiniciar la demo, borrar la clave `eldorado_mock_state` del `localStorage`
 
 - `npm run generar-codigos-qr` - genera los códigos QR (con la letra de cada estación superpuesta) en `public/assets/qr`, a partir de los tokens definidos en `scripts/generar-codigos-qr.js`.
 - `scripts/generar-contornos-letras.js` - genera los contornos SVG de las letras usados en `/letra/[slug]`.
+
+> **Importante:** los QR ya generados en `public/assets/qr` están codificados con la `baseUrl` hardcodeada en `scripts/generar-codigos-qr.js` (actualmente `https://descubre-eldorado.vercel.app/estacion/`, la versión en producción). Si se despliega en otra URL, hay que actualizar esa constante y volver a correr `npm run generar-codigos-qr` antes de imprimir/usar los QR.
 
 ## Guía para conectar el backend
 
