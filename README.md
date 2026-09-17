@@ -4,6 +4,8 @@ Frontend del concurso de gamificación urbana **"Descubre Eldorado"**, organizad
 
 Este repo es un **prototipo**: un frontend independiente que conserva las pantallas y el flujo visual del proyecto real, pero funciona sin backend usando datos mock en `src/lib/mock-api.ts`.
 
+Toda la información (estaciones, tramos de premio, pasos de participación, FAQ) fue tomada de la documentación oficial del concurso.
+
 ## Versión en producción
 
 Existe una versión de este proyecto con backend propio, ya desplegada: **https://descubre-eldorado.vercel.app**. Sirve como referencia visual y funcional del flujo completo.
@@ -61,6 +63,7 @@ Para reiniciar la demo, borrar la clave `eldorado_mock_state` del `localStorage`
 ## Pendientes de contenido
 
 - En `/estacion/[token]/detalle` (`src/app/estacion/[token]/detalle/page.tsx`), la sección **"Otros puntos del recorrido"** muestra las fotos de las demás estaciones (`estacion.url_imagen`, servidas desde `public/assets/sitios`). Estas imágenes son provisorias: hay que reemplazarlas por las fotos originales de cada lugar antes de publicar.
+- Las preguntas de trivia definidas en `src/lib/mock-api.ts` **no son las oficiales del concurso**: son de prueba, solo para validar el flujo de `/estacion/[token]/trivia`. Deben reemplazarse por las preguntas y respuestas oficiales antes de publicar.
 
 ## Scripts auxiliares
 
