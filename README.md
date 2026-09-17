@@ -1,4 +1,4 @@
-# Descubre Eldorado — Frontend Mockups
+# Descubre Eldorado - Frontend Mockups
 
 Frontend del concurso de gamificación urbana **"Descubre Eldorado"**, organizado por la Municipalidad de Eldorado (Misiones). Los participantes recorren 8 puntos de la ciudad, escanean un código QR en cada uno, completan la palabra **E-L-D-O-R-A-D-O** y acceden a premios.
 
@@ -60,8 +60,8 @@ Para reiniciar la demo, borrar la clave `eldorado_mock_state` del `localStorage`
 
 ## Scripts auxiliares
 
-- `npm run generar-codigos-qr` — genera los códigos QR (con la letra de cada estación superpuesta) en `public/assets/qr`, a partir de los tokens definidos en `scripts/generar-codigos-qr.js`.
-- `scripts/generar-contornos-letras.js` — genera los contornos SVG de las letras usados en `/letra/[slug]`.
+- `npm run generar-codigos-qr` - genera los códigos QR (con la letra de cada estación superpuesta) en `public/assets/qr`, a partir de los tokens definidos en `scripts/generar-codigos-qr.js`.
+- `scripts/generar-contornos-letras.js` - genera los contornos SVG de las letras usados en `/letra/[slug]`.
 
 ## Guía para conectar el backend
 
