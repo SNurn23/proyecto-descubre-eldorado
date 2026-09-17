@@ -51,6 +51,24 @@ Para detener el servidor, `Ctrl + C` en la terminal donde corre.
 | `/registro` | Alta de participante |
 | `/bases-y-condiciones` | Bases y condiciones del concurso |
 
+## Flujo de uso
+
+Hay dos formas de entrar a la app, según si el participante llegó escaneando un QR o navegando la web directamente.
+
+### 1. Landing page (sin escanear QR)
+
+- El usuario entra directo a `/`: ve la info del concurso, el mapa de las 8 estaciones, los tramos de premio, los pasos de participación y las FAQ.
+- Desde ahí puede ir a `/letra/[slug]` para ver el detalle de cada letra/estación, a `/registro` para darse de alta antes de salir a recorrer, o a `/mi-progreso` para consultar su avance si ya está registrado.
+- Es un flujo exploratorio/informativo: por sí solo no otorga letras ni requiere estar en el punto físico.
+
+### 2. Escaneo de QR (en el punto físico)
+
+1. El participante escanea el QR de la estación y cae en `/estacion/[token]`, donde se resuelve el token, se muestra la letra descubierta y se le pide el email.
+2. Si el email no está registrado, se lo redirige a `/registro?token=...&email=...`; al completar el alta, continúa automáticamente a la trivia de esa estación.
+3. Si el email ya está registrado y no había escaneado esa estación, se registra el escaneo y pasa a `/estacion/[token]/trivia`.
+4. Si ya había escaneado esa estación antes, se le avisa (no se vuelve a sumar la letra) y se lo invita a ir a `/mi-progreso`.
+5. Al responder la trivia, la letra queda sumada a su progreso, consultable en `/mi-progreso`.
+
 ## Cómo funciona el mock
 
 - `src/lib/api.ts` conserva los tipos y las funciones que consume la interfaz.
