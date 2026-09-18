@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
   getStoredEmail,
+  setStoredEmail,
   fetchProgreso,
   clearStoredEmail,
   ProgresoResponse,
@@ -19,21 +20,31 @@ const MapaProgreso = dynamic(() => import('@/components/MapaProgreso'), {
   ),
 });
 
-export default function MiProgresoPage() {
+function ContenidoMiProgreso() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const emailParam = searchParams.get('email');
+
   const [email, setEmail] = useState<string | null>(null);
   const [progreso, setProgreso] = useState<ProgresoResponse | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const saved = getStoredEmail();
-    setEmail(saved);
-    if (saved) {
-      cargarProgreso(saved);
+    const emailToUse = emailParam
+      ? emailParam.trim().toLowerCase()
+      : getStoredEmail();
+
+    if (emailParam) {
+      setStoredEmail(emailParam.trim().toLowerCase());
+    }
+
+    setEmail(emailToUse);
+    if (emailToUse) {
+      cargarProgreso(emailToUse);
     } else {
       setLoading(false);
     }
-  }, []);
+  }, [emailParam]);
 
   const cargarProgreso = async (userEmail: string) => {
     try {
@@ -273,5 +284,20 @@ export default function MiProgresoPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function MiProgresoPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-[80vh] flex flex-col items-center justify-center p-6 text-center">
+          <div className="w-10 h-10 border-4 border-[#1B9951] border-t-transparent rounded-full animate-spin mb-3" />
+          <p className="text-gray-600 text-sm">Cargando tu progreso...</p>
+        </div>
+      }
+    >
+      <ContenidoMiProgreso />
+    </Suspense>
   );
 }

@@ -5,6 +5,54 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { registrarParticipante, registrarEscaneo } from '@/lib/api';
 import ModalBases from '@/components/ModalBases';
 
+function formatearDni(val: string): string {
+  const clean = val.replace(/\D/g, '').slice(0, 8);
+  if (!clean) return '';
+  if (clean.length <= 3) return clean;
+  if (clean.length <= 5) return `${clean.slice(0, clean.length - 3)}.${clean.slice(-3)}`;
+  if (clean.length === 6) return `${clean.slice(0, 3)}.${clean.slice(3)}`;
+  if (clean.length === 7) return `${clean.slice(0, 1)}.${clean.slice(1, 4)}.${clean.slice(4)}`;
+  return `${clean.slice(0, 2)}.${clean.slice(2, 5)}.${clean.slice(5)}`;
+}
+
+function formatearTelefono(val: string): string {
+  const clean = val.replace(/\D/g, '');
+  if (!clean) return '';
+
+  const twoDigitCodes = ['11'];
+  const threeDigitCodes = [
+    '221', '223', '261', '264', '280', '291', '299', '341',
+    '342', '343', '351', '376', '381', '383', '385', '387', '388'
+  ];
+
+  const isZero = clean.startsWith('0');
+  const check = isZero ? clean.slice(1) : clean;
+
+  let codeLen = 4;
+  if (twoDigitCodes.some((c) => check.startsWith(c))) {
+    codeLen = isZero ? 3 : 2;
+  } else if (threeDigitCodes.some((c) => check.startsWith(c))) {
+    codeLen = isZero ? 4 : 3;
+  } else {
+    codeLen = isZero ? 5 : 4;
+  }
+
+  const maxDigits = isZero ? 11 : 10;
+  const trimmed = clean.slice(0, maxDigits);
+
+  if (trimmed.length <= codeLen) return trimmed;
+
+  const code = trimmed.slice(0, codeLen);
+  const rest = trimmed.slice(codeLen);
+
+  if (rest.length <= 4) {
+    return `(${code}) ${rest}`;
+  }
+
+  const splitPoint = rest.length - 4;
+  return `(${code}) ${rest.slice(0, splitPoint)}-${rest.slice(splitPoint)}`;
+}
+
 function FormularioRegistro() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -39,8 +87,11 @@ function FormularioRegistro() {
     if (!nombreCompleto.trim()) {
       newErrors.nombreCompleto = 'Ingresá tu nombre y apellido';
     }
-    if (!dni.trim()) {
+    const dniLimpio = dni.replace(/\D/g, '');
+    if (!dniLimpio) {
       newErrors.dni = 'Ingresá tu DNI';
+    } else if (dniLimpio.length < 7 || dniLimpio.length > 8) {
+      newErrors.dni = 'El DNI debe tener 7 u 8 números';
     }
     const emailTrimmed = email.trim().toLowerCase();
     if (!emailTrimmed) {
@@ -73,14 +124,13 @@ function FormularioRegistro() {
       await registrarParticipante({
         nombre,
         apellido,
-        dni: dni.trim(),
+        dni: dni.replace(/\D/g, ''),
         email: email.trim().toLowerCase(),
         telefono: telefono.trim(),
         barrio: barrio.trim(),
         aceptoTerminos: true,
       });
 
-                                                                 
       if (token) {
         try {
           await registrarEscaneo(email.trim().toLowerCase(), token);
@@ -151,10 +201,13 @@ function FormularioRegistro() {
             </span>
             <input
               type="text"
-              placeholder="Ej. 30123456"
+              inputMode="numeric"
+              maxLength={10}
+              placeholder="Ej. 30.123.456"
               value={dni}
               onChange={(e) => {
-                setDni(e.target.value);
+                const formatted = formatearDni(e.target.value);
+                setDni(formatted);
                 clearError('dni');
               }}
               className={`w-full h-12 rounded-xl border-[1.5px] px-3.5 text-[15px] bg-[#fff] focus:outline-none transition-colors ${errors.dni
@@ -203,9 +256,14 @@ function FormularioRegistro() {
             </span>
             <input
               type="tel"
-              placeholder="Ej. 03751 123456"
+              inputMode="tel"
+              maxLength={16}
+              placeholder="Ej. (3751) 12-3456"
               value={telefono}
-              onChange={(e) => setTelefono(e.target.value)}
+              onChange={(e) => {
+                const formatted = formatearTelefono(e.target.value);
+                setTelefono(formatted);
+              }}
               className="w-full h-12 rounded-xl border-[1.5px] border-[rgba(38,32,25,0.15)] px-3.5 text-[15px] bg-[#fff] focus:border-[#1B9951] focus:outline-none transition-colors"
             />
           </label>

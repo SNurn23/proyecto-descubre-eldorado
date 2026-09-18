@@ -107,7 +107,6 @@ export default function Home() {
             letter: est.letra,
             slug: est.slug,
             imageSrc:
-              est.url_letra ||
               `/assets/letters/base/letter-${est.orden}-${est.letra.toLowerCase()}.png`,
             color: est.color_hex,
             pillar: est.nombre_pilar,

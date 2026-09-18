@@ -16,6 +16,11 @@ export const metadata: Metadata = {
     'Municipalidad de Eldorado',
     'Turismo Misiones',
   ],
+  icons: {
+    icon: '/assets/eldorado-isologo.png',
+    shortcut: '/assets/eldorado-isologo.png',
+    apple: '/apple-icon.png',
+  },
 };
 
 export default function RootLayout({
